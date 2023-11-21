@@ -38,7 +38,11 @@ const Quiz = () => {
   return (
     <div id="quiz">
       <div id="question">
-        <QuestionTimer timeout={10000} onTimeout={handleSkipAnswer} />
+        <QuestionTimer
+          key={activeQuestionIndex}
+          timeout={45000} // 45 seconds in milliseconds
+          onTimeout={handleSkipAnswer}
+        />
         <h2>{Question[activeQuestionIndex].text}</h2>
         <ul id="answers">
           {shuffeledAnswers.map((answer) => (
