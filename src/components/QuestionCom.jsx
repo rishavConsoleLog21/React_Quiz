@@ -9,6 +9,16 @@ const QuestionCom = ({ indexId, onSelectAnswer, onSkipAnswer }) => {
     isCorrect: null,
   });
 
+  let timer = 45000;
+
+  if (answer.selectedAnswer) {
+    timer = 1000;
+  }
+
+  if (answer.isCorrect !== null) {
+    timer = 2000;
+  }
+
   function handleSelectAnswer(answer) {
     setAnswer({
       selectedAnswer: answer,
@@ -38,8 +48,10 @@ const QuestionCom = ({ indexId, onSelectAnswer, onSkipAnswer }) => {
     <>
       <div id="question">
         <QuestionTimer
-          timeout={45000} // 45 seconds in milliseconds
-          onTimeout={onSkipAnswer}
+          key={timer}
+          timeout={timer} // 45 seconds in milliseconds
+          onTimeout={answer.selectedAnswer === "" ? onSkipAnswer : null}
+          mode={answerState}
         />
         <h2>{Questions[indexId].text}</h2>
         <Answers
