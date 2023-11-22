@@ -1,15 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import QuestionTimer from "./QuestionTimer";
 import Answers from "./Answers";
+import Questions from "../questions";
 
-const QuestionCom = ({
-  questionText,
-  answers,
-  onSelectAnswer,
-  selectedAnswer,
-  answerState,
-  onSkipAnswer,
-}) => {
+const QuestionCom = ({ indexId, onSelectAnswer, onSkipAnswer }) => {
+  const [answer, setAnswer] = useState({
+    selectedAnswer: "",
+    isCorrect: null,
+  });
+
+  function handleSelectAnswer(answer) {
+    setAnswer({
+      selectedAnswer: answer,
+      isCorrect: null,
+    });
+
+    setTimeout(() => {
+      setAnswer({
+        selectedAnswer: answer,
+        isCorrect: Questions[indexId].answers[0] === answer,
+      });
+
+      setTimeout(() => {
+        onSelectAnswer(answer);
+      }, 2000);
+    }, 1000);
+  }
+
+  let answerState = "";
+  if (answer.selectedAnswer && answer.isCorrect !== null) {
+    answerState = answer.isCorrect ? "correct" : "incorrect";
+  } else if (answer.selectedAnswer) {
+    answerState = "answered";
+  }
+
   return (
     <>
       <div id="question">
@@ -17,12 +41,12 @@ const QuestionCom = ({
           timeout={45000} // 45 seconds in milliseconds
           onTimeout={onSkipAnswer}
         />
-        <h2>{questionText}</h2>
+        <h2>{Questions[indexId].text}</h2>
         <Answers
-          answers={answers}
-          selectedAnswer={selectedAnswer}
+          answers={Questions[indexId].answers}
+          selectedAnswer={answer.selectedAnswer}
           answerState={answerState}
-          onSelect={onSelectAnswer}
+          onSelect={handleSelectAnswer}
         />
       </div>
     </>
